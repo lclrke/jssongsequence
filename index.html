@@ -1,0 +1,151 @@
+
+<html>
+<head>
+
+  <script src="https://unpkg.com/tone@13.8.34/build/Tone.js"></script>
+  <script type="text/javascript" src="Samplers.js"></script>
+  <script type="text/javascript" src="Synths.js"></script>
+  </head>
+
+
+<body>
+
+<button onclick=start()>start</button>
+<button onclick=stop()>stop</button>
+  <script>
+
+Tone.Transport.bpm.value = 100;
+Tone.Master.volume.values = 0;
+
+
+
+Tone.Transport.scheduleRepeat(function(time){
+       ///console.log('Quarter Notes:', Tone.Transport.getTicksAtTime(time) / 192);
+        qnotes=Tone.Transport.getTicksAtTime(time) / 768;
+
+
+     console.log('bar:',qnotes);
+
+   }, "1m");
+
+
+var pads = new Tone.Part(function(time, chord){
+    FractPads.triggerAttackRelease(chord, "2m", time);
+  }, [["0:0:0", "F4"],   ["2m", "D4"]]).start();
+//
+  pads.loop = true;
+  pads.loopEnd = "4m";
+  //pads.humanize = true;
+
+
+
+
+var mainchords = new Tone.Part(function(time, chord){
+    FractTripChords.triggerAttackRelease(chord, "1m", time);
+  }, [["0:0:0", "F4"], ["1m","F4"],  ["2m", "D4"], ["3m", "D4"]]).start("8m");
+//fractTrips.dispose();
+  mainchords.loop = true;
+  mainchords.loopEnd = "4m";
+  mainchords.stop("16m");
+  mainchords.start("24m");
+
+
+
+
+
+
+
+
+var syntharp = new Tone.Part(function(time, note){
+    FracArpsynth.triggerAttackRelease(note, "4t",time);
+
+
+    }, [["0:0:0", "C4"], ["0:0:1.333","G3"],  ["0:0:2.666", "F3"]]).start("0");
+
+    syntharp.loop = true;
+    syntharp.loopEnd = "4n";
+
+
+//lowPass.frequency.setValueAtTime("0","0")
+    lowPass.frequency.linearRampToValueAtTime("1000", "4m");
+//
+
+
+
+var fractsyntharpfilt = new Tone.Part(function(time, value){
+
+//lowPass.frequency.linearRampToValueAtTime(value.frequency, time);
+lowPass.frequency.linearRampToValueAtTime(value.frequency, value.ftime);
+},   [{"time" :"0","frequency":"0","ftime":"8m"}]).start("4m");
+
+
+
+
+
+
+/*
+var fractarp = new Tone.Part(function(time, note){
+  LightMarimba.triggerAttackRelease(note, "8t",time);
+}, [["0:0:0", "D4"], ["0:0:1.333","A3"],  ["0:0:2.666", "G3"]]).start();
+
+*/
+
+
+var fractmarimarp = new Tone.Part(function(time, value){
+    LightMarimba.triggerAttackRelease(value.note, "4n", time, value.velocity);
+  }, [{"time" : "0:0:0", "note" : "D4", "velocity": .7},{"time" : "0:0:1.333", "note" : "A3", "velocity": 1},
+  {"time" : "0:0:2.666", "note" : "G3", "velocity": 1}]).start("4m");
+  fractmarimarp.loop = true;
+  fractmarimarp.loopEnd = "4n";
+
+  fractmarimarp.stop("16m");
+  fractmarimarp.start("20m");
+  //fractmarimarp.dispose();
+
+
+var fractplead= new Tone.Part(function(time, chord){
+    FractPianoLead.triggerAttackRelease(chord, "2m", time);
+  }, [["0:0:0", "F4"],   ["2m", "D4"]]).start();
+//fractpads.dispose()
+  fractplead.loop = true;
+  fractplead.loopEnd = "4m";
+  //pads.humanize = true;
+
+
+
+
+var marimroll= new Tone.Part(function(time, chord){
+  MarimbaRoll.triggerAttackRelease(chord, "2m", time);
+  }, [ ["6m", "D4"]]).start();
+//fractpads.dispose()
+  marimroll.loop = true;
+  marimroll.loopEnd = "8m";
+  //pads.humanize = true;
+
+var voxpad= new Tone.Part(function(time, chord){
+    FractVox.triggerAttackRelease(chord, "4m", time);
+  }, [["0:0:0", "F4"],   ["4m", "D4"]]).start();
+  //fractpads.dispose()
+    voxpad.loop = true;
+    voxpad.loopEnd = "8m";
+    //pads.humanize = true;
+
+
+
+
+
+function start() {
+  Tone.Transport.start();
+}
+
+function stop() {
+Tone.Transport.stop();
+}
+
+
+
+
+  </script>
+
+</body>
+</html>
